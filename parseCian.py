@@ -27,7 +27,7 @@ class Parser(object):
         self.flat_dict = {}
 
     # парсинг отдельной квартиры
-    def parse_flat_info(self, url):
+    def parse_flat_info_with_logging(self, url):
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         print(f"URL: {url}")
@@ -125,18 +125,106 @@ class Parser(object):
         print('*' * 100)
         self.flat_dict[url] = page_dict
 
+    # парсинг отдельной квартиры
+    def parse_flat_info(self, url):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        print(f"URL: {url}")
+        page_dict = {}
+
+        script_tag = [s for s in soup.find_all("script") if s.get("type") == "application/ld+json"][0]
+        if not script_tag:
+            print("Теги <script> не найдены.")
+        else:
+            price_match = re.search(r'"price":\s*(\d+)', str(script_tag))
+            if price_match:
+                price = int(price_match.group(1)) # цена
+                page_dict['price'] = price  # собираем dict страницы
+
+        # поиск метро
+        script_tag = soup.find("script", string=re.compile(r'"undergrounds":\s*\[.*?\]'))
+        undergrounds_match = re.findall(r'"undergrounds":\s*\[.*?\]', str(script_tag), re.DOTALL)[0]
+        pattern = r'"name":"([^"]+)".*?"travelType":"([^"]+)".*?"travelTime":(\d+)'
+        matches = re.findall(pattern, undergrounds_match)
+
+        if matches:
+            name, travel_type, travel_time = matches[0]
+            page_dict['underground'] = {'name': name, 'travel_type': travel_type,
+                                        'travel_time': int(travel_time)}  # собираем dict страницы
+
+        # поиск информации о площади, этаже
+        script_tag = soup.find("script", string=re.compile(r'"factoids":'))
+        if script_tag:
+            script_text = script_tag.string
+
+            # Поиск массива factoids в тексте
+            match = re.search(r'"factoids":(\[.*?\])', script_text)
+            if match:
+                factoids_json = match.group(1)
+
+                try:
+                    factoids = json.loads(factoids_json)
+                except json.JSONDecodeError as e:
+                    print("Ошибка при декодировании JSON:", e)
+                    factoids = []
+
+                # Извлечение значений площади
+                for factoid in factoids:
+                    if factoid["title"] == "Общая площадь":
+                        total_area = factoid["value"]
+                        page_dict['total_area'] = float(total_area[:-3].replace(',', '.'))  # собираем dict страницы
+                    elif factoid["title"] == "Жилая площадь":
+                        living_area = factoid["value"]
+                        page_dict['living_area'] = float(
+                            living_area[:-3].replace(',', '.'))  # собираем dict страницы
+                    elif factoid["title"] == "Этаж":
+                        floor = factoid["value"]
+                        page_dict['floor'] = floor  # собираем dict страницы
+                    elif factoid["title"] == "Площадь кухни":
+                        kitchen_area = factoid["value"]
+                        page_dict['kitchen_area'] = float(
+                            kitchen_area[:-3].replace(',', '.'))  # собираем dict страницы
+                    elif factoid["title"] == "Год постройки":
+                        built_year = factoid["value"]
+                        page_dict['year'] = int(built_year)  # собираем dict страницы
+                    elif factoid["title"] == "Год сдачи":
+                        completion_year = factoid["value"]
+                        page_dict['year'] = int(completion_year)  # собираем dict страницы
+
+        # поиск типа жилья
+        items = soup.find_all('div', {'data-name': 'OfferSummaryInfoItem'})
+        for item in items:
+            key = item.find('p')
+            if key and 'Тип жилья' in key.get_text(strip=True):
+                value = key.find_next('p')
+                if value:
+                    housing_type = value.get_text(strip=True)
+                    page_dict['housing_type'] = housing_type
+                    # match housing_type:
+                    #     case "Новостройка":
+                    #         page_dict['housing_type'] = 0
+                    #     case "Вторичка":
+                    #         page_dict['housing_type'] = 1
+                    #     case "Апартаменты":
+                    #         page_dict['housing_type'] = 2
+                    break
+        self.flat_dict[url] = page_dict
+
     # парсинг страницы
-    def parse_page(self):
+    def parse_page(self, logging=False):
         response = requests.get(self.url)
         soup = BeautifulSoup(response.text, 'html.parser')
         all_links = [a for a in soup.find_all("a") if a.find("div") is not None and a.find("div").get("data-name") == "Gallery"]
         for a in all_links:
-            self.parse_flat_info(a['href'])
+            if not logging:
+                self.parse_flat_info(a['href'])
+            else:
+                self.parse_flat_info_with_logging(a['href'])
 
     #парсинг указанного числа страниц
-    def parse_pages(self, number_of_parsing=20):
+    def parse_pages(self, number_of_parsing=20, logging=False):
         for i in range(number_of_parsing):
-            self.parse_page()
+            self.parse_page(logging)
             if self.page == '':
                 self.page = '&p=2'
             else:
