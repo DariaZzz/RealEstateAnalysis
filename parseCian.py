@@ -4,12 +4,17 @@ import json
 import requests
 
 class Parser(object):
+    """
+    класс для парсинга информации о квартирах
+    """
 
     def __init__(self):
-        self.page = ''
-        self.page_num = 2
+        self.page = '' #текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
+        self.page_num = 2 #номер текущей страницы, начиная со 2
         self.url = f"https://www.cian.ru/cat.php?currency=2&deal_type=sale&engine_version=2&maxprice=20000000&offer_type=flat&{self.page}region=1&room1=1&room2=1"
-        '''
+        # url с учетом текущей страницы
+        self.flat_dict = {}
+        """
         flat_dict:
             url - url квартиры
             price - стоимость квартиры (в рублях)
@@ -23,11 +28,15 @@ class Parser(object):
             kitchen_area - площадь кухни (в м кв.)
             year - год постройки или сдачи
             housing_type - тип жилья(Новостройка, Вторичка, Апартаменты) или комбинации (Новостройка / Апартаменты)
-        '''
-        self.flat_dict = {}
+        """
 
     # парсинг отдельной квартиры
     def parse_flat_info_with_logging(self, url):
+        """
+            парсинг отдельной квартиры с логированием
+            :param url: url квартиры
+            :return: Добавление квартиры в flat_dict
+        """
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         print(f"URL: {url}")
@@ -127,6 +136,11 @@ class Parser(object):
 
     # парсинг отдельной квартиры
     def parse_flat_info(self, url):
+        """
+        парсинг отдельной квартиры без логирования
+        :param url: url квартиры
+        :return: Добавление квартиры в flat_dict
+        """
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         print(f"URL: {url}")
@@ -212,6 +226,11 @@ class Parser(object):
 
     # парсинг страницы
     def parse_page(self, logging=False):
+        """
+        парсинг страницы
+        :param logging: проброс логирования
+        :return: Распаршенная страница в flat_dict
+        """
         response = requests.get(self.url)
         soup = BeautifulSoup(response.text, 'html.parser')
         all_links = [a for a in soup.find_all("a") if a.find("div") is not None and a.find("div").get("data-name") == "Gallery"]
@@ -221,8 +240,16 @@ class Parser(object):
             else:
                 self.parse_flat_info_with_logging(a['href'])
 
+
     #парсинг указанного числа страниц
     def parse_pages(self, number_of_parsing=20, logging=False):
+        """
+        метод парсинга указанного числа страниц
+        :param number_of_parsing: количество страниц
+        :param logging: нужно ли логирование при поиске информации квартиры
+        :return: Заполненное поле flat_dict
+        """
+
         for i in range(number_of_parsing):
             self.parse_page(logging)
             if self.page == '':
@@ -232,5 +259,8 @@ class Parser(object):
                 self.page_num += 1
 
 parser = Parser()
+'''
+
+'''
 parser.parse_pages(1)
 print(parser.flat_dict)
