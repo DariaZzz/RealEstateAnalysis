@@ -258,9 +258,9 @@ class Parser(object):
                 self.page = '&p=' + str(self.page_num)
                 self.page_num += 1
 
-parser = Parser()
+#parser = Parser()
 '''
 
 '''
-parser.parse_pages(1)
-print(parser.flat_dict)
+#parser.parse_pages(1)
+#print(parser.flat_dict)
