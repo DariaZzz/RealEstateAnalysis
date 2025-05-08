@@ -1,5 +1,5 @@
 from make_json import make_json
-from parseCian import Parser
+from Parsing.Parser import Parser
 
 parser = Parser()
 parser.parse_pages(1)
