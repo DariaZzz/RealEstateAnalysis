@@ -17,6 +17,7 @@ class Parser(object):
         """
         flat_dict:
             url - url квартиры
+            address - адрес, чаще - улица и дом
             price - стоимость квартиры (в рублях)
             number_of_rooms - кол-во комнат
             underground - метро:
@@ -43,10 +44,19 @@ class Parser(object):
         print(f"URL: {url}")
         page_dict = {}
 
+        #поиск адреса
+        a_tags = [s for s in soup.find_all("a") if s.get("data-name") == "AddressItem"][-2:]
+        if not a_tags:
+            print("Теги <a> не найдены.")
+        else:
+            address = a_tags[0].contents[0] +', ' + a_tags[1].contents[0]
+            print(f"Адрес: {address}")
+            self.flat_dict['address'] = address
+
         #поиск цены и количества комнат
         script_tag = [s for s in soup.find_all("script") if s.get("type") == "application/ld+json"][0]
         if not script_tag:
-            print("Теги <script> не найдены.")
+            print("Тег <script> не найден.")
         else:
             price_match = re.search(r'"price":\s*(\d+)', str(script_tag))
             if price_match:
@@ -153,6 +163,15 @@ class Parser(object):
         soup = BeautifulSoup(response.text, 'html.parser')
         # print(f"URL: {url}")
         page_dict = {}
+
+        #поиск адреса
+        a_tags = [s for s in soup.find_all("a") if s.get("data-name") == "AddressItem"][-2:]
+        if not a_tags:
+            print("Теги <a> не найдены.")
+        else:
+            address = a_tags[0].contents[0] +', ' + a_tags[1].contents[0]
+            print(f"Адрес: {address}")
+            self.flat_dict['address'] = address
 
         # поиск стоимости и кол-ва комнат
         script_tag = [s for s in soup.find_all("script") if s.get("type") == "application/ld+json"][0]
