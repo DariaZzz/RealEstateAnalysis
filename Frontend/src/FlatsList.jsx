@@ -1,5 +1,5 @@
 import React from "react";
-import FlatCard from "./api/FlatCard";
+import FlatCard from "./FlatCard";
 
 
 function FlatsList({flats}){
