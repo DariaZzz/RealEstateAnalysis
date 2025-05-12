@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import FlatsStatsPanel from './FlatsStatsPanel';
 import MetroStationAutocomplete from './MetroStationAutocomplete';
-import FlatsChart from './FlatsChart';
-import FlatCard from './FlatCard';
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css'; 
 import '@fontsource/montserrat/700.css'; 
