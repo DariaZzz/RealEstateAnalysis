@@ -2,8 +2,9 @@ from bs4 import BeautifulSoup
 import re
 import json
 import requests
+import config
 
-class Parser(object):
+class Parser:
     """
     класс для парсинга информации о квартирах
     """
@@ -11,7 +12,7 @@ class Parser(object):
     def __init__(self):
         self.page = '' #текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
         self.page_num = 2 #номер текущей страницы, начиная со 2
-        self.url = f"https://www.cian.ru/cat.php?currency=2&deal_type=sale&engine_version=2&maxprice=20000000&offer_type=flat&{self.page}region=1&room1=1&room2=1"
+        self.url = f'{config.URL}{self.page}'
         # url с учетом текущей страницы
         self.flat_dict = {}
         """
@@ -291,5 +292,5 @@ class Parser(object):
                 self.page_num += 1
 
 # parser = Parser()
-# parser.parse_pages(1)
+# parser.parse_pages(1, logging=True)
 # print(parser.flat_dict)
