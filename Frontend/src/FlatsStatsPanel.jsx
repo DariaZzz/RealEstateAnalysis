@@ -5,7 +5,9 @@ import Typography from '@mui/material/Typography';
 import { Select, MenuItem} from "@mui/material";
 import ScatterOptions from "./ScatterOptions";
 import FlatScatter from "./FlatsScatter";
-
+import { useDrawingArea } from "@mui/x-charts";
+import HistogramOptions from "./HistogramOptions";
+import FlatsHistogram from "./FlatsHistogram";
 
 
 function FlatsStatsPanel({
@@ -19,6 +21,7 @@ function FlatsStatsPanel({
   const [chartType, setChartType] = useState("Scatter"); 
   const [axisX, setAxisX] = useState("price");
   const [axisY, setAxisY] = useState("living_area");
+  const [histogramAxisX, setHistogramAxisX] = useState("price");
 
   const handleShowChart = () => {
     setShowChart(true);
@@ -51,7 +54,11 @@ function FlatsStatsPanel({
         );
       case 'Histogram':
         return (
-          <div>хуйн</div>
+          <HistogramOptions
+          histogramAxisX={histogramAxisX}
+          setHistogramAxisX={setHistogramAxisX}
+          
+          />
         );
       default:
         return null;
@@ -73,6 +80,7 @@ function FlatsStatsPanel({
             <div style={{
               display: "flex",
               gap: "50px",
+              marginBottom: "20px"
             }}> 
               <Button
               variant="contained"
@@ -103,10 +111,16 @@ function FlatsStatsPanel({
           
           </div>
 
-          {showChart &&(<FlatScatter
+          {showChart && chartType ==="Scatter" &&(<FlatScatter
             data = {filteredFlats}
             axisX={axisX}
             axisY={axisY}
+          />)}
+
+          {showChart && chartType ==="Histogram" &&(<FlatsHistogram
+            flats = {filteredFlats}
+            parameter={histogramAxisX}
+            
           />)}
       </div>
     )
