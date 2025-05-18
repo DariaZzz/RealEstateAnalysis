@@ -139,7 +139,7 @@ class Parser:
             if key and 'Тип жилья' in key.get_text(strip=True):
                 value = key.find_next('p')
                 if value:
-                    housing_type = value.get_text(strip=True)
+                    housing_type = value.get_text(strip=True).split(' / ')[0]
                     print("Тип жилья:", housing_type)
                     page_dict['housing_type'] = housing_type
                     # match housing_type:
@@ -245,7 +245,7 @@ class Parser:
             if key and 'Тип жилья' in key.get_text(strip=True):
                 value = key.find_next('p')
                 if value:
-                    housing_type = value.get_text(strip=True)
+                    housing_type = value.get_text(strip=True).split(' / ')[0]
                     page_dict['housing_type'] = housing_type
                     # match housing_type:
                     #     case "Новостройка":
