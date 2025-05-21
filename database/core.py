@@ -1,6 +1,8 @@
-from sqlalchemy import text, insert
+import datetime
+from sqlalchemy import text, insert, select, func
 from database import engine
-from models import metadata_obj, underground_lines_table, underground_stations_table
+from models import metadata_obj, underground_lines_table, underground_stations_table, costs_table, \
+    housing_types_table, move_types_table, urls_table, flats_table
 
 
 def create_tables():
@@ -154,6 +156,157 @@ def insert_stations():
         conn.execute(stmt)
         conn.commit()
 
-create_tables()
-insert_lines()
-insert_stations()
+
+def get_or_create(conn, table, defaults=None, **kwargs):
+    result = conn.execute(select(table).filter_by(**kwargs)).first()
+    if result:
+        return result[0]
+    else:
+        insert_data = kwargs.copy()
+        if defaults:
+            insert_data.update(defaults)
+        result = conn.execute(insert(table).values(**insert_data))
+        return result.inserted_primary_key[0]
+
+
+def process_flat_data(conn, url, flat_info):
+    underground_id = get_or_create(
+        conn, underground_stations_table, 
+        name=flat_info['underground']['name']
+    )
+    
+    housing_type_id = get_or_create(
+        conn, housing_types_table,
+        name=flat_info['housing_type']
+    )
+    
+    move_type_id = get_or_create(
+        conn, move_types_table,
+        name=flat_info['underground']['travel_type']
+    )
+    
+    url_id = get_or_create(conn, urls_table, url=url)
+    
+    flat_exists = conn.execute(
+        select(flats_table.c.id).where(flats_table.c.url_id == url_id)
+    ).scalar()
+    
+    if flat_exists:
+        conn.execute(
+            insert(costs_table).values(
+                current_cost=flat_info['price'],
+                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                flat_id=flat_exists
+            )
+        )
+        return f"Price updated ID {flat_exists}"
+    else:
+        flat_data = {
+            'underground_id': underground_id,
+            'url_id': url_id,
+            'address': flat_info['address'],
+            'number_of_rooms': flat_info['number_of_rooms'],
+            'total_area': flat_info['total_area'],
+            'living_area': flat_info.get('living_area'),
+            'kitchen_area': flat_info.get('kitchen_area'),
+            'floor': flat_info.get('floor'),
+            'housing_type_id': housing_type_id,
+            'year': flat_info['year'],
+            'move_type_id': move_type_id,
+            'move_time': flat_info['underground']['travel_time']
+        }
+        
+        flat_id = conn.execute(insert(flats_table).values(**flat_data)).inserted_primary_key[0]
+        
+        conn.execute(
+            insert(costs_table).values(
+                current_cost=flat_info['price'],
+                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                flat_id=flat_id
+            )
+        )
+        return f"Flat added ID {flat_id}"
+
+
+def process_flats_dict(flats_dict):
+    results = []
+    with engine.begin() as conn:
+        for url, flat_info in flats_dict.items():
+            try:
+                result = process_flat_data(conn, url, flat_info)
+                results.append(result)
+            except Exception as e:
+                results.append(f"Error proccesing {url}: {str(e)}")
+    return results
+
+def select_by_underground(underground_name):
+    with engine.connect() as conn:
+        query = select([
+            flats_table.c.id,
+            flats_table.c.address,
+            flats_table.c.number_of_rooms,
+            flats_table.c.total_area,
+            flats_table.c.floor,
+            func.max(costs_table.c.current_cost).label('current_price'),
+            underground_stations_table.c.name.label('underground'),
+            housing_types_table.c.name.label('housing_type')
+        ]).select_from(
+            flats_table.join(
+                underground_stations_table,
+                flats_table.c.underground_id == underground_stations_table.c.id
+            ).join(
+                housing_types_table,
+                flats_table.c.housing_type_id == housing_types_table.c.id
+            ).join(
+                costs_table,
+                flats_table.c.id == costs_table.c.flat_id
+            )
+        ).where(
+            underground_stations_table.c.name == underground_name
+        ).group_by(
+            flats_table.c.id,
+            underground_stations_table.c.name,
+            housing_types_table.c.name
+        )
+       
+        result = conn.execute(query)
+        
+        return [dict(row) for row in result]
+    
+
+def get_flats_by_rooms(number_of_rooms):
+    with engine.connect() as conn:
+        query = select([
+            flats_table.c.id,
+            flats_table.c.address,
+            flats_table.c.number_of_rooms,
+            flats_table.c.total_area,
+            flats_table.c.floor,
+            func.max(costs_table.c.current_cost).label('current_price'),
+            underground_stations_table.c.name.label('underground'),
+            housing_types_table.c.name.label('housing_type')
+        ]).select_from(
+            flats_table.join(
+                underground_stations_table,
+                flats_table.c.underground_id == underground_stations_table.c.id
+            ).join(
+                housing_types_table,
+                flats_table.c.housing_type_id == housing_types_table.c.id
+            ).join(
+                costs_table,
+                flats_table.c.id == costs_table.c.flat_id
+            )
+        ).group_by(
+            flats_table.c.id,
+            underground_stations_table.c.name,
+            housing_types_table.c.name
+        )
+
+        if isinstance(number_of_rooms, list):
+            query = query.where(flats_table.c.number_of_rooms.in_(number_of_rooms))
+        else:
+            query = query.where(flats_table.c.number_of_rooms == number_of_rooms)
+
+        result = conn.execute(query)
+        
+        return [dict(row) for row in result]

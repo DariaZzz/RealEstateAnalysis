@@ -30,7 +30,7 @@ flats_table = Table(
     Column("total_area", Integer),
     Column("living_area", Integer),
     Column("kitchen_area", Integer),
-    Column("floor", Integer),
+    Column("floor", String),
     Column("housing_type_id", Integer, ForeignKey("housing_types_table.id")),
     Column("year", Integer),
     Column("move_type_id", Integer, ForeignKey("move_types_table.id")),
@@ -51,7 +51,7 @@ move_types_table = Table(
     Column("name", String)
 )
 
-urls_tabele = Table(
+urls_table = Table(
     "url",
     metadata_obj,
     Column("id", Integer, primary_key=True),
