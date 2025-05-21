@@ -1,0 +1,1 @@
+URL = f"https://www.cian.ru/cat.php?currency=2&deal_type=sale&engine_version=2&maxprice=20000000&offer_type=flat&region=1&room1=1&room2=1"
