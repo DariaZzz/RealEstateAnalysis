@@ -21,4 +21,4 @@ jobs:
 
       - name: Run parser
         run: |
-          docker run --rm parser python parsing/main.py
+          docker run --rm parser python main.py
