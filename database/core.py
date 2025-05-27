@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import text, insert, select, func
-from database import engine
-from models import metadata_obj, underground_lines_table, underground_stations_table, costs_table, \
+from database.database import engine
+from database.models import metadata_obj, underground_lines_table, underground_stations_table, costs_table, \
     housing_types_table, move_types_table, urls_table, flats_table
 
 
@@ -195,7 +195,7 @@ def process_flat_data(conn, url, flat_info):
         conn.execute(
             insert(costs_table).values(
                 current_cost=flat_info['price'],
-                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                date_of_parsing=datetime.datetime.now().strftime('%Y-%m-%d'),
                 flat_id=flat_exists
             )
         )
@@ -221,7 +221,7 @@ def process_flat_data(conn, url, flat_info):
         conn.execute(
             insert(costs_table).values(
                 current_cost=flat_info['price'],
-                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                date_of_parsing=datetime.datetime.now().strftime('%Y-%m-%d'),
                 flat_id=flat_id
             )
         )

@@ -23,17 +23,17 @@ flats_table = Table(
     "flat",
     metadata_obj,
     Column("id", Integer, primary_key=True),
-    Column("underground_id", Integer, ForeignKey("underground_stations_table.id")),
-    Column("url_id", Integer, ForeignKey("urls_tabele.id")),
+    Column("underground_id", Integer, ForeignKey("underground_station.id")),
+    Column("url_id", Integer, ForeignKey("url.id")),
     Column("address", String),
     Column("number_of_rooms", Integer),
     Column("total_area", Integer),
     Column("living_area", Integer),
     Column("kitchen_area", Integer),
     Column("floor", String),
-    Column("housing_type_id", Integer, ForeignKey("housing_types_table.id")),
+    Column("housing_type_id", Integer, ForeignKey("housing_type.id")),
     Column("year", Integer),
-    Column("move_type_id", Integer, ForeignKey("move_types_table.id")),
+    Column("move_type_id", Integer, ForeignKey("move_type.id")),
     Column("move_time", String)
 )
 
@@ -64,5 +64,5 @@ costs_table = Table(
     Column("id", Integer, primary_key=True),
     Column("current_cost", Integer),
     Column("date_of_parsing", String),
-    Column("flat_id", Integer, ForeignKey("flats_table.id"))
+    Column("flat_id", Integer, ForeignKey("flat.id"))
 )
