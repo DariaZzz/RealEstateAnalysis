@@ -2,8 +2,9 @@ from bs4 import BeautifulSoup
 import re
 import json
 import requests
+import config
 
-class Parser(object):
+class Parser:
     """
     класс для парсинга информации о квартирах
     """
@@ -11,7 +12,7 @@ class Parser(object):
     def __init__(self):
         self.page = '' #текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
         self.page_num = 2 #номер текущей страницы, начиная со 2
-        self.url = f"https://www.cian.ru/cat.php?currency=2&deal_type=sale&engine_version=2&maxprice=20000000&offer_type=flat&{self.page}region=1&room1=1&room2=1"
+        self.url = f'{config.URL}{self.page}'
         # url с учетом текущей страницы
         self.flat_dict = {}
         """
@@ -29,7 +30,7 @@ class Parser(object):
             floor - этаж
             kitchen_area - площадь кухни (в м кв.)
             year - год постройки или сдачи
-            housing_type - тип жилья(Новостройка, Вторичка, Апартаменты) или комбинации (Новостройка / Апартаменты)
+            housing_type - тип жилья(Новостройка, Вторичка, Апартаменты)
         """
 
     # парсинг отдельной квартиры
@@ -51,7 +52,7 @@ class Parser(object):
         else:
             address = a_tags[0].contents[0] +', ' + a_tags[1].contents[0]
             print(f"Адрес: {address}")
-            self.flat_dict['address'] = address
+            page_dict['address'] = address
 
         #поиск цены и количества комнат
         script_tag = [s for s in soup.find_all("script") if s.get("type") == "application/ld+json"][0]
@@ -138,7 +139,7 @@ class Parser(object):
             if key and 'Тип жилья' in key.get_text(strip=True):
                 value = key.find_next('p')
                 if value:
-                    housing_type = value.get_text(strip=True)
+                    housing_type = value.get_text(strip=True).split(' / ')[0]
                     print("Тип жилья:", housing_type)
                     page_dict['housing_type'] = housing_type
                     # match housing_type:
@@ -244,7 +245,7 @@ class Parser(object):
             if key and 'Тип жилья' in key.get_text(strip=True):
                 value = key.find_next('p')
                 if value:
-                    housing_type = value.get_text(strip=True)
+                    housing_type = value.get_text(strip=True).split(' / ')[0]
                     page_dict['housing_type'] = housing_type
                     # match housing_type:
                     #     case "Новостройка":
@@ -291,5 +292,5 @@ class Parser(object):
                 self.page_num += 1
 
 # parser = Parser()
-# parser.parse_pages(1)
+# parser.parse_pages(1, logging=True)
 # print(parser.flat_dict)
