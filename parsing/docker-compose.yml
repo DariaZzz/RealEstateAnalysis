@@ -1,6 +1,0 @@
-services:
-  parser:
-    build:
-      context: ../                # Контекст сборки — корень проекта
-      dockerfile: parsing/Dockerfile   # Путь к Dockerfile внутри контекста
-    command: python main.py
