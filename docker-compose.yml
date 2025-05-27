@@ -14,7 +14,10 @@ services:
   parser:
     build:               # Контекст сборки — корень проекта
       dockerfile: parsing/Dockerfile   # Путь к Dockerfile внутри контекста
-    command: python main.py
+    container_name: parser
+    environment:
+      - PYTHONPATH=/parser
+    restart: unless-stopped
 
 volumes:
   db_data:  # Это нужно, чтобы данные не пропадали при перезапуске

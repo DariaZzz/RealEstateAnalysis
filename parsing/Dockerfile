@@ -9,5 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY parsing/main.py .
 COPY parsing/Parser.py .
 COPY config.py .
+COPY scheduler.py .
 
-CMD ["python", "main.py"]
+CMD ["python", "scheduler.py"]

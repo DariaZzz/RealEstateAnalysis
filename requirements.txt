@@ -10,3 +10,4 @@ urllib3==2.4.0
 pydantic_settings
 sqlalchemy
 psycopg2
+schedule
