@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import text, insert, select, func
-from database import engine
-from models import metadata_obj, underground_lines_table, underground_stations_table, costs_table, \
+from database.database import engine
+from database.models import metadata_obj, underground_lines_table, underground_stations_table, costs_table, \
     housing_types_table, move_types_table, urls_table, flats_table
 
 
