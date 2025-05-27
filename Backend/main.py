@@ -4,10 +4,10 @@ from database.models import underground_stations_table
 from database.models import underground_lines_table
 from database.models import flats_table, housing_types_table, move_types_table, urls_table, costs_table
 from database.database import engine
-
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/api/metro-stations', methods=['GET'])
 def get_metro_stations():
@@ -63,7 +63,16 @@ def get_costs(flats_id):
 
 @app.route('/api/flats/', methods=['GET'])
 def get_flats():
-    metro_stations = list(map(int, request.args.get('metro_stations').split(',')))
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=12, type=int)
+
+
+    metro_stations = request.args.get('metro_stations')
+    if(metro_stations):
+        metro_stations = list(map(int, metro_stations.split(',')))
+    else:
+        metro_stations = []
+
     with engine.connect() as conn:
         j = join(flats_table,
                  underground_stations_table,
@@ -82,6 +91,12 @@ def get_flats():
             move_types_table.c.id == flats_table.c.move_type_id
         )
 
+        count_query = select(func.count()).select_from(j)
+        if metro_stations:
+            count_query = count_query.where(underground_stations_table.c.id.in_(metro_stations))
+
+        total = conn.execute(count_query).scalar()
+
         query = select(
             flats_table.c.id,
             flats_table.c.address,
@@ -94,6 +109,7 @@ def get_flats():
             flats_table.c.move_time,
             underground_lines_table.c.color,
             underground_stations_table.c.id.label('station_id'),
+            underground_stations_table.c.name.label('name'),
             urls_table.c.url,
             housing_types_table.c.name.label('housing_type'),
             move_types_table.c.name.label('move_type')
@@ -102,26 +118,41 @@ def get_flats():
         if metro_stations:
             query = query.where(underground_stations_table.c.id.in_(metro_stations))
 
+        query = query.limit(per_page).offset((page - 1) * per_page)
+
         data = list(conn.execute(query))
         flats_id = [flat.id for flat in data]
         costs = get_costs(flats_id)
-        print(type(costs))
-        data = [{
+
+        response  = {
+            'data': [{
             "flatId": row.id,
             "living_area": row.living_area,
             "total_area": row.total_area,
             "kitchen_area": row.kitchen_area,
             "url": row.url,
             "stationId": row.station_id,
-            "travel_type": row.move_type,
+            "travel_type": row.move_type.lower(),
             "travel_time": row.move_time,
             "price": costs[row.id],
             "address": row.address,
-            "floor": row.floor,
+            "floor": int(row.floor.split('/')[0]),
+            "total_floors": int(row.floor.split('/')[1]),
+            "housing_type": row.housing_type,
+            "stationLineColor": row.color,
+            "metroStation": row.name,
             'number_of_rooms': row.number_of_rooms,
-            'cost': costs[row.id]
-        } for row in data]
-    return jsonify(data)
+        } for row in data],
+            "pagination": {
+                "total": total,
+                "pages": (total + per_page - 1) // per_page,  # Округление вверх
+                "current_page": page,
+                "per_page": per_page,
+                "has_next": page * per_page < total,
+                "has_prev": page > 1
+            }
+        }
+    return jsonify(response)
 
 
 if __name__ == '__main__':
