@@ -30,7 +30,7 @@ class Parser:
             floor - этаж
             kitchen_area - площадь кухни (в м кв.)
             year - год постройки или сдачи
-            housing_type - тип жилья(Новостройка, Вторичка, Апартаменты) или комбинации (Новостройка / Апартаменты)
+            housing_type - тип жилья(Новостройка, Вторичка, Апартаменты)
         """
 
     # парсинг отдельной квартиры
@@ -52,7 +52,7 @@ class Parser:
         else:
             address = a_tags[0].contents[0] +', ' + a_tags[1].contents[0]
             print(f"Адрес: {address}")
-            self.flat_dict['address'] = address
+            page_dict['address'] = address
 
         #поиск цены и количества комнат
         script_tag = [s for s in soup.find_all("script") if s.get("type") == "application/ld+json"][0]
