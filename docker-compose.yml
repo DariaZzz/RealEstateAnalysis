@@ -22,7 +22,12 @@ services:
     ports:
       - "5000:5000"
     command: gunicorn --bind 0.0.0.0:5000 Backend.main:app
-
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
 
 volumes:
   db_data:  # Это нужно, чтобы данные не пропадали при перезапуске
