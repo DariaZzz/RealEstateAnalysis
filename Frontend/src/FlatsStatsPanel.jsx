@@ -11,10 +11,8 @@ import FlatsHistogram from "./FlatsHistogram";
 
 
 function FlatsStatsPanel({
-    selectedStations,
         filteredFlats,
-        setFilteredFlats,
-    
+        paginationData, 
 })
 {
   const [showChart, setShowChart] = useState(false);
@@ -22,42 +20,30 @@ function FlatsStatsPanel({
   const [axisX, setAxisX] = useState("price");
   const [axisY, setAxisY] = useState("living_area");
   const [histogramAxisX, setHistogramAxisX] = useState("price");
+  
 
   const handleShowChart = () => {
     setShowChart(true);
   };
 
-    useEffect(() => {
-    async function fetchFlats () {
-      const data = await getFlats(selectedStations.map(station => station.stationId));
-      console.log(data)
-      setFilteredFlats(data);
-    }
-    fetchFlats();    
-  }, [selectedStations]);
-
+  
 
   const renderModalContent = () => {
     switch(chartType) {
       case 'Scatter':
-        
         return (
-          
           <ScatterOptions
           axisX={axisX}
           setAxisX={setAxisX}
           setAxisY={setAxisY}
           axisY={axisY}
           />
-            
-          
         );
       case 'Histogram':
         return (
           <HistogramOptions
           histogramAxisX={histogramAxisX}
           setHistogramAxisX={setHistogramAxisX}
-          
           />
         );
       default:
@@ -86,7 +72,7 @@ function FlatsStatsPanel({
               variant="contained"
               onClick={handleShowChart}
               >
-                Ебануть график
+                Построить график
               </Button>
               
             
@@ -106,9 +92,7 @@ function FlatsStatsPanel({
             
 
             {renderModalContent()}
-            
             </div>
-          
           </div>
 
           {showChart && chartType ==="Scatter" &&(<FlatScatter

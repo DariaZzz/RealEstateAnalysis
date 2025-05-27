@@ -35,7 +35,7 @@ function MetroStationAutocomplete({
         renderOption={(props, option) => {
           const { key, ...restProps } = props; 
           return (
-            <li key={key} {...restProps}> 
+            <li key={option.stationId} {...restProps}> 
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div 
                   style={{

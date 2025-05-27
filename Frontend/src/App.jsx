@@ -5,6 +5,7 @@ import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css'; 
 import '@fontsource/montserrat/700.css'; 
 import FlatsList from './FlatsList';
+import { getFlats } from './api';
 
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -18,6 +19,42 @@ const theme = createTheme({
 function App() {
   const [selectedStations, setSelectedStations] = useState([]);
   const [filteredFlats, setFilteredFlats] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setPaginationData] = useState({
+    current_page: 1,
+    pages: 1,
+    total: 0
+  });
+
+  const fetchFlats = async (page = 1) => {
+    console.log(page)
+    try {
+      const data = await getFlats(
+        selectedStations.map(station => station.stationId),
+        page,
+        12
+      );
+      setFilteredFlats(data.data || []);
+      setPaginationData(data.pagination || {});
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Ошибка загрузки квартир:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFlats(currentPage);
+  }, [selectedStations, currentPage]);
+
+  const onPageChange = (newPage) => {
+    setCurrentPage(newPage);
+    setPaginationData(
+      {
+        ...paginationData,
+        current_page: newPage,
+      }
+    )
+  }
 
   return (
      <ThemeProvider theme={theme}>{
@@ -35,19 +72,22 @@ function App() {
       }}>
       
         <MetroStationAutocomplete 
-          setSelectedStations={setSelectedStations}
+          setSelectedStations={(data) => {setSelectedStations(data);onPageChange(1);}}
           selectedStations={selectedStations}
+
         />
 
         <FlatsStatsPanel 
-        selectedStations = {selectedStations}
+        paginationData={paginationData}
         filteredFlats={filteredFlats}
-        setFilteredFlats={setFilteredFlats}
+       
         />
         
 
         <FlatsList
           flats={filteredFlats}
+          pagination={paginationData}
+          onPageChange={onPageChange}
         />
       </div>
     }</ThemeProvider>
