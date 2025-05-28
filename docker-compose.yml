@@ -12,8 +12,10 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data  # Сохраняем данные БД
   parser:
-    build:               # Контекст сборки — корень проекта
+    build:
+      context: . # Контекст сборки — корень проекта
       dockerfile: parsing/Dockerfile   # Путь к Dockerfile внутри контекста
+    env_file: .env
     container_name: parser
     environment:
       - PYTHONPATH=/parser
