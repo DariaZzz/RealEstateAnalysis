@@ -14,7 +14,7 @@ def run_main_script():
     logger.info("Запуск main.py...")
     try:
         result = subprocess.run(
-            ["python", "main.py"],
+            ["python", "parsing/main.py"],
             capture_output=True,
             text=True
         )
