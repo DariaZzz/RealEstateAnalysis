@@ -19,27 +19,6 @@ underground_stations_table = Table(
     Column("line_id", Integer, ForeignKey("underground_line.id"))
 )
 
-urls_table = Table(
-    "url",
-    metadata_obj,
-    Column("id", Integer, primary_key=True),
-    Column("url", String)
-)
-
-housing_types_table = Table(
-    "housing_type",
-    metadata_obj,
-    Column("id", Integer, primary_key=True),
-    Column("name", String)
-)
-
-move_types_table = Table(
-    "move_type",
-    metadata_obj,
-    Column("id", Integer, primary_key=True),
-    Column("name", String)
-)
-
 flats_table = Table(
     "flat",
     metadata_obj,
@@ -58,6 +37,26 @@ flats_table = Table(
     Column("move_time", String)
 )
 
+housing_types_table = Table(
+    "housing_type",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("name", String)
+)
+
+move_types_table = Table(
+    "move_type",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("name", String)
+)
+
+urls_table = Table(
+    "url",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("url", String)
+)
 
 costs_table = Table(
     "cost",

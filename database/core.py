@@ -195,7 +195,7 @@ def process_flat_data(conn, url, flat_info):
         conn.execute(
             insert(costs_table).values(
                 current_cost=flat_info['price'],
-                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                date_of_parsing=datetime.datetime.now().strftime('%Y-%m-%d'),
                 flat_id=flat_exists
             )
         )
@@ -221,7 +221,7 @@ def process_flat_data(conn, url, flat_info):
         conn.execute(
             insert(costs_table).values(
                 current_cost=flat_info['price'],
-                date_of_parsing=datetime.now().strftime('%Y-%m-%d'),
+                date_of_parsing=datetime.datetime.now().strftime('%Y-%m-%d'),
                 flat_id=flat_id
             )
         )

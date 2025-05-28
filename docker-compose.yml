@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:  # Это наша база данных
     image: postgres:15   # Используем PostgreSQL 15
@@ -20,6 +18,25 @@ services:
     environment:
       - PYTHONPATH=/parser
     restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./Backend/Dockerfile
+    depends_on:
+      - db
+    env_file: .env
+    environment:
+      PYTHONPATH: .
+    ports:
+      - "5000:5000"
+    command: gunicorn --bind 0.0.0.0:5000 Backend.main:app
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
 
 volumes:
   db_data:  # Это нужно, чтобы данные не пропадали при перезапуске
