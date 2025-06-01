@@ -11,10 +11,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def run_main_script():
+    '''
+    Запуск основного файла пасринга
+    :return: обновление бд
+    '''
     logger.info("Запуск main.py...")
     try:
         result = subprocess.run(
-            ["python", "parsing/main.py"],
+            ["python", "main.py"],
             capture_output=True,
             text=True
         )
@@ -28,7 +32,7 @@ def run_main_script():
 # Расписание (например, каждый день в 03:30)
 # schedule.every().day.at("03:30").do(run_main_script)
 
-# Альтернативно для теста: каждые 5 минут
+# Альтернативно для теста: каждую минуту
 schedule.every(1).minutes.do(run_main_script)
 
 logger.info("Планировщик запущен. Ожидание задач...")
