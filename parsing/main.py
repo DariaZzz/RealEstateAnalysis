@@ -6,5 +6,5 @@ from parsing.Parser import Parser
 основной файл для парсинга
 '''
 parser = Parser()
-parser.parse_pages(1, logging=True)
+parser.parse_pages(5, logging=True)
 process_flats_dict(parser.flat_dict)

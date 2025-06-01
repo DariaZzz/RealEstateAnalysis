@@ -30,10 +30,10 @@ def run_main_script():
         logger.error(f"Ошибка: {e}")
 
 # Расписание (например, каждый день в 03:30)
-# schedule.every().day.at("03:30").do(run_main_script)
+schedule.every().day.at("03:30").do(run_main_script)
 
 # Альтернативно для теста: каждую минуту
-schedule.every(1).minutes.do(run_main_script)
+# schedule.every(1).minutes.do(run_main_script)
 
 logger.info("Планировщик запущен. Ожидание задач...")
 run_main_script()
