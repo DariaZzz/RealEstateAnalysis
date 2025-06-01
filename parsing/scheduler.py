@@ -36,6 +36,7 @@ def run_main_script():
 schedule.every(1).minutes.do(run_main_script)
 
 logger.info("Планировщик запущен. Ожидание задач...")
+run_main_script()
 while True:
     schedule.run_pending()
     time.sleep(60)  # Проверяем каждую минуту
