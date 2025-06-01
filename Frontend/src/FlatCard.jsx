@@ -5,9 +5,34 @@ import CardContent from '@mui/material/CardContent';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 
+/**
+ * Компонент карточки квартиры для отображения основной информации
+ *
+ * @component
+ * @param {Object} props - Пропсы компонента
+ * @param {Object} props.flat - Объект с данными о квартире
+ * @param {number} props.flat.price - Цена квартиры
+ * @param {string} props.flat.url - Ссылка на объявление
+ * @param {number} props.flat.number_of_rooms - Количество комнат
+ * @param {number} props.flat.total_area - Общая площадь
+ * @param {number} props.flat.floor - Этаж квартиры
+ * @param {number} props.flat.total_floors - Всего этажей в доме
+ * @param {number} props.flat.travel_time - Время до метро
+ * @param {string} props.flat.travel_type - Тип передвижения ("пешком"/"на машине")
+ * @param {string} props.flat.stationLineColor - Цвет линии метро
+ * @param {string} props.flat.metroStation - Название станции метро
+ * @param {string} props.flat.address - Адрес квартиры
+ * @returns {JSX.Element} Карточка с информацией о квартире
+ */
+
 function FlatCard({
   flat,
 }){
+   /**
+   * Форматирует цену согласно локали (добавляет пробелы между разрядами)
+   * @param {number} price - Цена квартиры
+   * @returns {string} Отформатированная строка с ценой
+   */
   const formatPrice = (price)=> {
     return new Intl.NumberFormat('ru-RU').format(price);
   }
