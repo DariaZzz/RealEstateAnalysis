@@ -67,12 +67,12 @@ DB_NAME=flats
 Запустите сборку контейнера бд и файл init.py для создания базы данных на локальном хосте. После остановите проект.
 ```bash
 docker-compose up -d --build db
-python -m init.py
+python init.py
 docker-compose down
 ```
 **ВАЖНО**: Теперь поменяйте значение DB_HOST на db!
 
-4. Запутите сборку остальных образов и контейнеры командой
+4. Запутите сборку образов и контейнеры командой
 ```bash
 docker-compose up -d --build
 ```
@@ -98,7 +98,6 @@ docker-compose down
 │   ├── database.py
 │   ├── __init__.py
 │   ├── models.py
-│   └── __pycache__
 ├── docker-compose.yml
 ├── Frontend
 │   ├── Dockerfile
