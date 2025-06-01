@@ -6,15 +6,22 @@ import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/700.css'; 
 import FlatsList from './FlatsList';
 import { getFlats } from './api';
-
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+/**
+ * Тема Material-UI с настройками шрифта Montserrat
+ */
 
 const theme = createTheme({
   typography: {
     fontFamily: '"Montserrat", sans-serif',
   },
 });
+
+/**
+ * Основной компонент приложения для отображения списка квартир
+ * с возможностью фильтрации по станциям метро и пагинацией
+ */
 
 function App() {
   const [selectedStations, setSelectedStations] = useState([]);
@@ -26,6 +33,10 @@ function App() {
     total: 0
   });
 
+    /**
+   * Загружает список квартир с учетом фильтров и пагинации
+   * @param {number} page - Номер страницы для загрузки (по умолчанию 1)
+   */
   const fetchFlats = async (page = 1) => {
     console.log(page)
     try {
@@ -45,6 +56,11 @@ function App() {
   useEffect(() => {
     fetchFlats(currentPage);
   }, [selectedStations, currentPage]);
+
+  /**
+   * Обработчик изменения страницы пагинации
+   * @param {number} newPage - Новая страница для отображения
+   */
 
   const onPageChange = (newPage) => {
     setCurrentPage(newPage);

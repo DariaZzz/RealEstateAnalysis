@@ -1,10 +1,18 @@
 import React from "react";
 import { Select, MenuItem } from "@mui/material";
 
+/**
+ * Компонент выбора параметра для построения гистограммы
+ *
+ * @param {Object} props - Входные параметры компонента
+ * @param {string} props.histogramAxisX - Текущее выбранное значение оси X
+ * @param {Function} props.setHistogramAxisX - Функция для изменения значения оси X
+ * @returns {JSX.Element} Компонент выбора параметра гистограммы
+ */
 function HistogramOptions({
     histogramAxisX,
     setHistogramAxisX,
-    
+
 
 }){
     return(
@@ -28,9 +36,9 @@ function HistogramOptions({
             <MenuItem value="number_of_rooms">Количество комнат</MenuItem>
             <MenuItem value="floor">Этаж</MenuItem>
             <MenuItem value="total_floors">Количество этажей</MenuItem>
-            
+
             </Select>
-           
+
         </div>
     )
 
