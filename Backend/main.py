@@ -11,6 +11,14 @@ CORS(app)
 
 @app.route('/api/metro-stations', methods=['GET'])
 def get_metro_stations():
+    """Возвращает список всех станций метро с их линиями.
+
+        Returns:
+            JSON: Список объектов станций метро, каждый содержит:
+                - stationName: название станции
+                - stationId: идентификатор станции
+                - stationLineColor: цвет линии метро
+        """
     with engine.connect() as conn:
         j = join(underground_stations_table,
                  underground_lines_table,
@@ -32,6 +40,14 @@ def get_metro_stations():
 
 
 def get_costs(flats_id):
+    """Получает последние цены для списка квартир.
+
+        Args:
+            flats_id (list): Список идентификаторов квартир
+
+        Returns:
+            dict: Словарь, где ключ - id квартиры, значение - последняя известная цена
+        """
     with engine.connect() as conn:
         subq = (
             select(
@@ -63,6 +79,16 @@ def get_costs(flats_id):
 
 @app.route('/api/flats/', methods=['GET'])
 def get_flats():
+    """Возвращает список квартир с возможностью пагинации и фильтрации по станциям метро.
+
+        Query Parameters:
+            page (int): Номер страницы (по умолчанию 1)
+            per_page (int): Количество элементов на странице (по умолчанию 12)
+            metro_stations (str): Строка с ID станций метро через запятую для фильтрации
+
+        Returns:
+            JSON: Объект с данными о квартирах и информацией о пагинации
+        """
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=12, type=int)
 
@@ -123,6 +149,9 @@ def get_flats():
         data = list(conn.execute(query))
         flats_id = [flat.id for flat in data]
         costs = get_costs(flats_id)
+        move = {"walk":"пешком", "transport":"на машине"}
+
+
 
         response  = {
             'data': [{
@@ -132,7 +161,7 @@ def get_flats():
             "kitchen_area": row.kitchen_area,
             "url": row.url,
             "stationId": row.station_id,
-            "travel_type": row.move_type.lower(),
+            "travel_type": move[row.move_type],
             "travel_time": row.move_time,
             "price": costs[row.id],
             "address": row.address,
