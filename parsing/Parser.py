@@ -11,7 +11,7 @@ class Parser:
 
     def __init__(self):
         self.page = '' #текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
-        self.page_num = 2 #номер текущей страницы, начиная со 2
+        self.page_num = 1 #номер текущей страницы, начиная со 2
         self.url = f'{config.URL}{self.page}'
         # url с учетом текущей страницы
         self.flat_dict = {}
@@ -284,12 +284,11 @@ class Parser:
         """
 
         for i in range(number_of_parsing):
+            print(self.page_num)
             self.parse_page(logging)
-            if self.page == '':
-                self.page = '&p=2'
-            else:
-                self.page = '&p=' + str(self.page_num)
-                self.page_num += 1
+            self.page_num += 1
+            self.page = '&p=' + str(self.page_num)
+            self.url = config.URL + self.page
 
 # parser = Parser()
 # parser.parse_pages(1, logging=True)
