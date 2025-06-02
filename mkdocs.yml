@@ -1,0 +1,19 @@
+site_name: RealEstateAnalysis
+nav:
+  - Home: index.md
+  - "Parser": Parser.md
+  - "Backend": backend.md
+  - "database": database.md
+  - "scheduler": scheduler.md
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          inventories: []  # Отключаем загрузку инвентарей
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: false
+
+theme: readthedocs
