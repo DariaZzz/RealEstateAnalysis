@@ -1,8 +1,12 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
 
+'''
+файл с таблицами
+'''
+
 metadata_obj = MetaData()
 
-
+# таблица линий метро
 underground_lines_table = Table(
     "underground_line",
     metadata_obj,
@@ -11,6 +15,7 @@ underground_lines_table = Table(
     Column("color", String)
 )
 
+# таблица станций метро
 underground_stations_table = Table(
     "underground_station",
     metadata_obj,
@@ -19,6 +24,7 @@ underground_stations_table = Table(
     Column("line_id", Integer, ForeignKey("underground_line.id"))
 )
 
+# таблица квартир
 flats_table = Table(
     "flat",
     metadata_obj,
@@ -37,6 +43,7 @@ flats_table = Table(
     Column("move_time", String)
 )
 
+# таблица типов квартир
 housing_types_table = Table(
     "housing_type",
     metadata_obj,
@@ -44,6 +51,7 @@ housing_types_table = Table(
     Column("name", String)
 )
 
+# таблица типов передвижений до метро
 move_types_table = Table(
     "move_type",
     metadata_obj,
@@ -51,6 +59,7 @@ move_types_table = Table(
     Column("name", String)
 )
 
+# таблица url-квартир
 urls_table = Table(
     "url",
     metadata_obj,
@@ -58,6 +67,7 @@ urls_table = Table(
     Column("url", String)
 )
 
+# таблица стоимостей
 costs_table = Table(
     "cost",
     metadata_obj,

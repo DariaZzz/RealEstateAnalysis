@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+'''
+файл с параметрами для подключения к дб
+'''
 
 class Settings(BaseSettings):
     DB_HOST: str
