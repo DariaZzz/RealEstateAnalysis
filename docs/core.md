@@ -1,4 +1,4 @@
-# Database
+# core
 
 ::: database.core
     options:

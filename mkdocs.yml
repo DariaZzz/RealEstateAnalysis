@@ -1,10 +1,13 @@
 site_name: RealEstateAnalysis
 nav:
   - Home: index.md
-  - "Parser": Parser.md
-  - "Backend": backend.md
-  - "database": database.md
-  - "scheduler": scheduler.md
+  - Backend:
+      - main: backend.md
+  - Database:
+      - core: core.md
+  - Parsing:
+      - parser: Parser.md
+      - scheduler: scheduler.md
 
 plugins:
   - mkdocstrings:
