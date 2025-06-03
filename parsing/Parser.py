@@ -10,34 +10,33 @@ class Parser:
     """
 
     def __init__(self):
-        self.page = '' #текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
-        self.page_num = 1 #номер текущей страницы, начиная со 2
-        self.url = f'{config.URL}{self.page}'
-        # url с учетом текущей страницы
-        self.flat_dict = {}
+        self.page: str = '' # текущая страница (в начале строка пустая, тк на начальной странице нет &p=1
+        self.page_num: int = 1 # номер текущей страницы, начиная со 2
+        self.url: str = f'{config.URL}{self.page}' # url с учетом текущей страницы
+        self.flat_dict: dict = {}
         """
         flat_dict:
-            url - url квартиры
-            address - адрес, чаще - улица и дом
-            price - стоимость квартиры (в рублях)
-            number_of_rooms - кол-во комнат
-            underground - метро:
-                name - название
-                travel_type - тип передвижения до метро (walk, transport)
-                travel_time - время передвижения до метро (в минутах)
-            total_area - общая площадь (в м кв.)
-            living_area - жилая площадь (в м кв.)
-            floor - этаж
-            kitchen_area - площадь кухни (в м кв.)
-            year - год постройки или сдачи
+            url - url квартиры\n
+            address - адрес, чаще - улица и дом\n
+            price - стоимость квартиры (в рублях)\n
+            number_of_rooms - кол-во комнат\n
+            underground - метро:\n
+                name - название\n
+                travel_type - тип передвижения до метро (walk, transport)\n
+                travel_time - время передвижения до метро (в минутах)\n
+            total_area - общая площадь (в м кв.)\n
+            living_area - жилая площадь (в м кв.)\n
+            floor - этаж\n
+            kitchen_area - площадь кухни (в м кв.)\n
+            year - год постройки или сдачи\n
             housing_type - тип жилья(Новостройка, Вторичка, Апартаменты)
         """
 
     # парсинг отдельной квартиры
     def parse_flat_info_with_logging(self, url):
         """
-            парсинг отдельной квартиры с логированием
-            :param url: url квартиры
+            парсинг отдельной квартиры с логированием \n
+            :param url: url квартиры \n
             :return: Добавление квартиры в flat_dict
         """
         response = requests.get(url)
@@ -142,13 +141,6 @@ class Parser:
                     housing_type = value.get_text(strip=True).split(' / ')[0]
                     print("Тип жилья:", housing_type)
                     page_dict['housing_type'] = housing_type
-                    # match housing_type:
-                    #     case "Новостройка":
-                    #         page_dict['housing_type'] = 0
-                    #     case "Вторичка":
-                    #         page_dict['housing_type'] = 1
-                    #     case "Апартаменты":
-                    #         page_dict['housing_type'] = 2
                     break
         print('*' * 100)
         self.flat_dict[url] = page_dict
@@ -156,13 +148,13 @@ class Parser:
     # парсинг отдельной квартиры
     def parse_flat_info(self, url):
         """
-        парсинг отдельной квартиры без логирования
-        :param url: url квартиры
+        парсинг отдельной квартиры без логирования \n
+        :param url: url квартиры \n
         :return: Добавление квартиры в flat_dict
         """
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
-        # print(f"URL: {url}")
+        print(f"URL: {url}")
         page_dict = {}
 
         #поиск адреса
@@ -171,7 +163,7 @@ class Parser:
             print("Теги <a> не найдены.")
         else:
             address = a_tags[0].contents[0] +', ' + a_tags[1].contents[0]
-            print(f"Адрес: {address}")
+            # print(f"Адрес: {address}")
             self.flat_dict['address'] = address
 
         # поиск стоимости и кол-ва комнат
@@ -247,21 +239,14 @@ class Parser:
                 if value:
                     housing_type = value.get_text(strip=True).split(' / ')[0]
                     page_dict['housing_type'] = housing_type
-                    # match housing_type:
-                    #     case "Новостройка":
-                    #         page_dict['housing_type'] = 0
-                    #     case "Вторичка":
-                    #         page_dict['housing_type'] = 1
-                    #     case "Апартаменты":
-                    #         page_dict['housing_type'] = 2
                     break
         self.flat_dict[url] = page_dict
 
     # парсинг страницы
     def parse_page(self, logging=False):
         """
-        парсинг страницы
-        :param logging: проброс логирования
+        парсинг страницы \n
+        :param logging: проброс логирования \n
         :return: Распаршенная страница в flat_dict
         """
         response = requests.get(self.url)
@@ -277,9 +262,9 @@ class Parser:
     #парсинг указанного числа страниц
     def parse_pages(self, number_of_parsing=20, logging=False):
         """
-        метод парсинга указанного числа страниц
-        :param number_of_parsing: количество страниц
-        :param logging: нужно ли логирование при поиске информации квартиры
+        метод парсинга указанного числа страниц\n
+        :param number_of_parsing: количество страниц\n
+        :param logging: нужно ли логирование при поиске информации квартиры\n
         :return: Заполненное поле flat_dict
         """
 

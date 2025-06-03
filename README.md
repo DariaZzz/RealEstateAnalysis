@@ -5,14 +5,15 @@
 Проект создан для удобного анализа рынка недвижимости 1-2-хкомнатных квартир до 20 млн. руб. в городе Москва.
 Пользователь имеет возможность удобно отобрать квартиры по метро, визуализировать информацию по выбранным критериям.
 
-## Зависимости
+## Зависимости и требования
+- Python 3.11+
+- Docker 28.0.4+
 
 ```bash 
 pip install -r requirements.txt
 ```
 Зависимости, требуемые для работы проекта 
 (установка будет производиться во время запуска контейнеров):
-* python>=3.12
 * annotated-types==0.7.0
 * beautifulsoup4==4.13.4
 * blinker==1.9.0
@@ -28,11 +29,21 @@ pip install -r requirements.txt
 * itsdangerous==2.2.0
 * Jinja2==3.1.6
 * MarkupSafe==3.0.2
+* mkdocs==1.6.1
+* mkdocs-autorefs==1.4.2
+* mkdocs-get-deps==0.2.0
+* mkdocstrings==0.29.1
+* mkdocstrings-python==1.16.11
+* packaging==25.0
+* pathspec==0.12.1
+* platformdirs==4.3.8
 * psycopg2-binary==2.9.10
 * pydantic==2.11.5
 * pydantic-settings==2.9.1
 * pydantic_core==2.33.2
 * python-dotenv==1.1.0
+* PyYAML==6.0.2
+* pyyaml_env_tag==1.1
 * requests==2.32.3
 * schedule==1.2.2
 * soupsieve==2.7
@@ -70,7 +81,7 @@ docker-compose up -d --build db
 python init.py
 docker-compose down
 ```
-**ВАЖНО**: Теперь поменяйте значение DB_HOST на db!
+**ВАЖНО**: Теперь поменяйте значение DB_HOST на db
 
 4. Запутите сборку образов и контейнеры командой
 ```bash
@@ -97,7 +108,7 @@ docker-compose down
 │   ├── core.py
 │   ├── database.py
 │   ├── __init__.py
-│   ├── models.py
+│   └── models.py
 ├── docker-compose.yml
 ├── Frontend
 │   ├── Dockerfile
@@ -133,4 +144,13 @@ docker-compose down
 
 ## Документация
 
--
+Документация выполнена с помощью mkdocs для .py модулей и storybook для .jsx компонентов
+Чтобы посмотреть документацию в браузере, выполните команду в корне проекта
+```bash
+mkdocs serve
+```
+Создать документацию в ./site
+```bash
+mkdocs build
+```
+После создания посмотреть документацию можно, открыв в браузере ./site/index.html

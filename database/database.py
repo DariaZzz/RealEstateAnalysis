@@ -1,7 +1,9 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import URL, create_engine, text
+from sqlalchemy import URL, create_engine
 from database.config import settings
+
+'''
+файл для запуска дб
+'''
 
 engine = create_engine(
     url=settings.DATABASE_URL_psycopg,
