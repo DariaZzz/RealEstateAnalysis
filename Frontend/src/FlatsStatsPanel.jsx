@@ -6,6 +6,7 @@ import { Select, MenuItem} from "@mui/material";
 import ScatterOptions from "./ScatterOptions";
 import FlatScatter from "./FlatsScatter";
 import { useDrawingArea } from "@mui/x-charts";
+import { fetchAllFlats } from './api';
 import HistogramOptions from "./HistogramOptions";
 import FlatsHistogram from "./FlatsHistogram";
 
@@ -16,15 +17,16 @@ import FlatsHistogram from "./FlatsHistogram";
  * @param {Object} props.paginationData - Данные пагинации
  */
 function FlatsStatsPanel({
-  filteredFlats,
   paginationData,
+  selectedStations
 }) {
   // Состояния компонента
   const [showChart, setShowChart] = useState(false); // Видимость графика
   const [chartType, setChartType] = useState("Scatter"); // Тип графика (Scatter/Histogram)
   const [axisX, setAxisX] = useState("price"); // Параметр для оси X
   const [axisY, setAxisY] = useState("living_area"); // Параметр для оси Y
-  const [histogramAxisX, setHistogramAxisX] = useState("price"); // Параметр для гистограммы
+  const [histogramAxisX, setHistogramAxisX] = useState("living_area"); // Параметр для гистограммы
+  const [allFlats, setallFlats] = useState([]); // Параметр для гистограммы
 
   /**
    * Обработчик отображения графика
@@ -32,6 +34,24 @@ function FlatsStatsPanel({
   const handleShowChart = () => {
     setShowChart(true);
   };
+
+
+  const allFetchFlats = async () => {
+    try {
+      const data = await fetchAllFlats(
+        selectedStations.map(station => station.stationId)
+      );
+      setallFlats(data || []);
+      
+    } catch (error) {
+      console.error('Ошибка загрузки квартир:', error);
+    }
+  };
+
+  useEffect(() => {
+    allFetchFlats();
+    console.log(allFlats);
+  }, [selectedStations]);
 
   /**
    * Рендерит компонент выбора параметров в зависимости от типа графика
@@ -105,10 +125,11 @@ function FlatsStatsPanel({
         </div>
       </div>
 
+      
       {/* Отображение выбранного графика */}
       {showChart && chartType === "Scatter" && (
         <FlatScatter
-          data={filteredFlats}
+          data={allFlats}
           axisX={axisX}
           axisY={axisY}
         />
@@ -116,7 +137,7 @@ function FlatsStatsPanel({
 
       {showChart && chartType === "Histogram" && (
         <FlatsHistogram
-          flats={filteredFlats}
+          flats={allFlats}
           parameter={histogramAxisX}
         />
       )}

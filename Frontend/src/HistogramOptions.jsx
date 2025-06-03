@@ -28,7 +28,7 @@ function HistogramOptions({
             size="small"
             sx={{ width: '200px' }}
             >
-            <MenuItem value="price">Цена</MenuItem>
+            
             <MenuItem value="living_area">Жилая площадь</MenuItem>
             <MenuItem value="total_area">Общая площадь</MenuItem>
             <MenuItem value="kitchen_area">Площадь кухни</MenuItem>
