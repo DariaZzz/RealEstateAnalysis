@@ -8,6 +8,8 @@ nav:
   - Parsing:
       - parser: Parser.md
       - scheduler: scheduler.md
+  - Frontend:
+      - components: storybook/index.html
 
 plugins:
   - mkdocstrings:
