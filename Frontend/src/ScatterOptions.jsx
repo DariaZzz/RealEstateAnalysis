@@ -24,7 +24,6 @@ function ScatterOptions({
         { value: "total_area", label: "Общая площадь" },
         { value: "travel_time", label: "Время до метро" },
         { value: "kitchen_area", label: "Площадь кухни" },
-        { value: "number_of_rooms", label: "Количество комнат" },
         { value: "floor", label: "Этаж" },
         { value: "total_floors", label: "Количество этажей" }
     ];

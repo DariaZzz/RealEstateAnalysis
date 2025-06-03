@@ -38,7 +38,6 @@ function App() {
    * @param {number} page - Номер страницы для загрузки (по умолчанию 1)
    */
   const fetchFlats = async (page = 1) => {
-    console.log(page)
     try {
       const data = await getFlats(
         selectedStations.map(station => station.stationId),
@@ -95,7 +94,7 @@ function App() {
 
         <FlatsStatsPanel 
         paginationData={paginationData}
-        filteredFlats={filteredFlats}
+        selectedStations={selectedStations}
        
         />
         

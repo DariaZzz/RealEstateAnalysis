@@ -47,7 +47,27 @@ async function getFlats(metroStations, page = 1, perPage = 12) {
     return response.json();
 }
 
+async function fetchAllFlats(metroStations) {
+    let allFlats = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+        const response = await fetch(
+            `http://localhost:5000/api/flats/?metro_stations=${metroStations.join(',')}&page=${page}&per_page=100`
+        );
+        const data = await response.json();
+        
+        allFlats.push(...data.data);
+        hasMore = data.pagination.has_next;
+        page++;
+    }
+
+    return allFlats;
+}
+
 export {
     getMetroStations,
-    getFlats
+    getFlats,
+    fetchAllFlats
 }
