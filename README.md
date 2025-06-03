@@ -24,9 +24,7 @@ pip install -r requirements.txt
 * colorama==0.4.6
 * Flask==3.1.1
 * flask-cors==6.0.0
-* ghp-import==2.1.0
 * greenlet==3.2.2
-* griffe==1.7.3
 * idna==3.10
 * itsdangerous==2.2.0
 * Jinja2==3.1.6
@@ -40,11 +38,9 @@ pip install -r requirements.txt
 * pathspec==0.12.1
 * platformdirs==4.3.8
 * psycopg2-binary==2.9.10
-* pymdown-extensions==10.15
 * pydantic==2.11.5
 * pydantic-settings==2.9.1
 * pydantic_core==2.33.2
-* python-dateutil==2.9.0.post0
 * python-dotenv==1.1.0
 * PyYAML==6.0.2
 * pyyaml_env_tag==1.1
@@ -52,11 +48,9 @@ pip install -r requirements.txt
 * schedule==1.2.2
 * soupsieve==2.7
 * SQLAlchemy==2.0.41
-* six==1.17.0
 * typing-inspection==0.4.1
 * typing_extensions==4.13.2
 * urllib3==2.4.0
-* watchdog==6.0.0
 * Werkzeug==3.1.3
 
 ## Запуск
