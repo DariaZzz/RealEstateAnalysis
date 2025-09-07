@@ -51,7 +51,7 @@ function MetroStationAutocomplete({
                     width: 12,
                     height: 12,
                     borderRadius: '50%',
-                    backgroundColor: option.stationLineColor,
+                    backgroundColor: "#990066",
                     marginRight: 8
                   }}
                 />

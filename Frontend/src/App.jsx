@@ -62,11 +62,11 @@ function App() {
    */
 
   const onPageChange = (newPage) => {
-    setCurrentPage(newPage);
+    setCurrentPage(1);
     setPaginationData(
       {
         ...paginationData,
-        current_page: newPage,
+        current_page: 1,
       }
     )
   }

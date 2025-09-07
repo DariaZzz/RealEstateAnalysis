@@ -57,21 +57,18 @@ function FlatCard({
               fontSize: "20px",
             }}>
               {formatPrice(flat.price)}
-               ₽
+               $
             </Typography>
 
             <Typography style={{
                 fontSize:"12px",
                 padding: "3px",
                 textAlign: "right",
+                color: "#1976d2"
               }}>
-                <Link 
-                  href={flat.url}
-                  underline="none"
-                  sx={{ color: "#1976d2" }} 
-                >
+                
                   Перейти на циан
-                </Link>
+                
               </Typography>
             </Box>
             
@@ -116,7 +113,7 @@ function FlatCard({
                     height: 12,
                     minWidth: 12,
                     borderRadius: '50%',
-                    backgroundColor: flat.stationLineColor,
+                    backgroundColor: "#990066",
                     marginRight: 8
                   }}
                 >

@@ -116,8 +116,8 @@ function FlatsStatsPanel({
             size="small"
             sx={{ width: '200px' }}
           >
-            <MenuItem value="Scatter">Scatter Plot</MenuItem>
-            <MenuItem value="Histogram">Histogram</MenuItem>
+            <MenuItem value="Histogram">Scatter Plot</MenuItem>
+            <MenuItem value="Scatter">Histogram</MenuItem>
           </Select>
 
           {/* Компонент выбора параметров графика */}
@@ -129,7 +129,7 @@ function FlatsStatsPanel({
       {/* Отображение выбранного графика */}
       {showChart && chartType === "Scatter" && (
         <FlatScatter
-          data={allFlats}
+          data={allFlats.slice(0, 12)}
           axisX={axisX}
           axisY={axisY}
         />
