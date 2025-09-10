@@ -39,7 +39,7 @@ class Parser:
             :param url: url квартиры \n
             :return: Добавление квартиры в flat_dict
         """
-        response = requests.get(url)
+        response = requests.get(url, headers=config.headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         print(f"URL: {url}")
         page_dict = {}
@@ -152,7 +152,7 @@ class Parser:
         :param url: url квартиры \n
         :return: Добавление квартиры в flat_dict
         """
-        response = requests.get(url)
+        response = requests.get(url, config.headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         print(f"URL: {url}")
         page_dict = {}
@@ -249,7 +249,8 @@ class Parser:
         :param logging: проброс логирования \n
         :return: Распаршенная страница в flat_dict
         """
-        response = requests.get(self.url)
+
+        response = requests.get(self.url, headers=config.headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         all_links = [a for a in soup.find_all("a") if a.find("div") is not None and a.find("div").get("data-name") == "Gallery"]
         for a in all_links:
@@ -275,6 +276,6 @@ class Parser:
             self.page = '&p=' + str(self.page_num)
             self.url = config.URL + self.page
 
-# parser = Parser()
-# parser.parse_pages(1, logging=True)
-# print(parser.flat_dict)
+parser = Parser()
+parser.parse_pages(1, logging=True)
+print(parser.flat_dict)
