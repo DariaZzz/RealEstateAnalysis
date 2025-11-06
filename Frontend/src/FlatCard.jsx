@@ -34,6 +34,7 @@ function FlatCard({
    * @returns {string} Отформатированная строка с ценой
    */
   const formatPrice = (price)=> {
+    console.log(aaa);
     return new Intl.NumberFormat('ru-RU').format(price);
   }
 
