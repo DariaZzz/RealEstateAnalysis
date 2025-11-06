@@ -62,7 +62,6 @@ function App() {
    */
 
   const onPageChange = (newPage) => {
-    b = 13;
     setCurrentPage(newPage);
     setPaginationData(
       {

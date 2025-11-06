@@ -7,7 +7,6 @@ import ScatterOptions from "./ScatterOptions";
 import FlatScatter from "./FlatsScatter";
 import { useDrawingArea } from "@mui/x-charts";
 import { fetchAllFlats } from './api';
-import { fetchAllFlats } from './api';
 import HistogramOptions from "./HistogramOptions";
 import FlatsHistogram from "./FlatsHistogram";
 
@@ -45,7 +44,7 @@ function FlatsStatsPanel({
       setallFlats(data || []);
       
     } catch (error) {
-      
+      console.error('Ошибка загрузки квартир:', error);
     }
   };
 
